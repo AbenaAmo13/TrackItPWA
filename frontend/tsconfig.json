@@ -1,0 +1,20 @@
+{
+    "compilerOptions": {
+      "target": "ES5",                     // Target ECMAScript 5 for compatibility
+      "lib": ["DOM", "DOM.Iterable", "ESNext"], // Include libraries for browser and modern JavaScript
+      "jsx": "react",                     // Enable JSX support for React
+      "module": "ESNext",                 // Use ESNext modules
+      "moduleResolution": "Node",         // Resolve modules like Node.js
+      "strict": true,                     // Enable strict type-checking
+      "esModuleInterop": true,            // Allow default imports from CommonJS modules
+      "skipLibCheck": true,               // Skip type checking of declaration files
+      "forceConsistentCasingInFileNames": true, // Enforce case sensitivity in imports
+      "baseUrl": "./",                    // Base directory for non-relative imports
+      "paths": {
+        "*": ["src/*"]                    // Map imports to the `src` directory
+      }
+    },
+    "include": ["src/**/*"],              // Include all TypeScript and TSX files in `src`
+    "exclude": ["node_modules", "build"]  // Exclude `node_modules` and build artifacts
+  }
+  

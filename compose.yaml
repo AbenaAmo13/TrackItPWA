@@ -1,0 +1,65 @@
+services:
+  frontend:
+    build:
+      context: frontend
+      target: development
+    ports:
+      - ${FRONTEND_PORT}:${FRONTEND_PORT}
+    stdin_open: true
+    volumes:
+      - ./frontend:/usr/src/app
+      - /usr/src/app/node_modules
+    restart: always
+    environment:
+      FRONTEND_PORT : ${FRONTEND_PORT}
+    networks:
+      - react-express
+    depends_on:
+      - backend
+
+  backend:
+    restart: always
+    build:
+      context: backend
+      target: development
+    volumes:
+      - ./backend:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - mongo
+    networks:
+      - express-mongo
+      - react-express
+    expose: 
+      - "${BACKEND_PORT}:${BACKEND_PORT}"
+    environment:
+      - BACKEND_PORT=${BACKEND_PORT}
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_ADMIN_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_ADMIN_PASSWORD}
+      - MONGO_INITDB_DATABASE=${MONGO_INITDB_DATABASE}
+      - MONGO_ADMIN_USERNAME=${MONGO_ADMIN_USERNAME}
+      - MONGO_ADMIN_PASSWORD=${MONGO_ADMIN_PASSWORD}
+      - MONGO_EXPOSE_PORT=${MONGO_EXPOSE_PORT}
+      - MONGO_URI=${MONGO_URI}
+
+  mongo:
+    restart: always
+    image: mongo
+    env_file: .env
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_ADMIN_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_ADMIN_PASSWORD}
+      - MONGO_INITDB_DATABASE=${MONGO_INITDB_DATABASE}
+      - MONGO_EXPOSE_PORT=${MONGO_EXPOSE_PORT}
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - express-mongo
+    expose:
+      - "${MONGO_EXPOSE_PORT}:${MONGO_EXPOSE_PORT}"
+networks:
+  react-express:
+  express-mongo:
+
+volumes:
+  mongo_data:
